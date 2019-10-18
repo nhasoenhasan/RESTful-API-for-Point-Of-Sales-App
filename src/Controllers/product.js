@@ -97,7 +97,7 @@ module.exports = {
         res.json ("Succes Order"); 
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       })
 },
 

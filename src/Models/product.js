@@ -15,7 +15,7 @@ module.exports = {
   getProduct:req => {
     const Pagination=getPagination(req);
     return new Promise ((resolve, reject) => {
-      let query ='SELECT prducts.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
+      let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
       let set = [Pagination.perpage,Pagination.page];
       query = mysql.format(query, set);
       connection.query (query, (err, response) => {
@@ -169,7 +169,7 @@ module.exports = {
           if (!err) {
             if (response[0].quantity >= body.quantity ) {
                 if (response[0].quantity == 0) {
-                  resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
+                  reject('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
                 } else {
                   connection.query (
                     query,
@@ -182,7 +182,7 @@ module.exports = {
                     });
                 }
             } else {
-              resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
+              reject('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
             }
           } else {
             reject (err);
@@ -193,7 +193,6 @@ module.exports = {
 
   orderProduct: req => {
     const total=req.body.total;
-    console.log(req.body.total);
     const insertorder="INSERT INTO `order` SET total=?";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
     const querycekqty="SELECT quantity FROM products WHERE id_product IN (?)"
@@ -214,7 +213,7 @@ module.exports = {
         if (!err) {
           //Compare Quantity
           cekqty.forEach(function(item, index,array){
-            if (response[index].quantity>qtyinsert[index]) {
+            if (response[index].quantity > qtyinsert[index]) {
               qtyStatus.push('true');
             }else{
               qtyStatus.push('false');
@@ -222,7 +221,7 @@ module.exports = {
           });
           //Insert Order
           if (qtyStatus.includes('false')) {
-            resolve("Data Quantity is To Much")
+            reject ("Data Insert Is To Much");
           }else{
             connection.query (
               //Insert Order

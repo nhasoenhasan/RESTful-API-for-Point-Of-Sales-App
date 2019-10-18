@@ -9,7 +9,7 @@ module.exports = {
         form.formgetProduct (res, 200, response);
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       });
   },
 
@@ -20,7 +20,7 @@ module.exports = {
         res.json ("Succes Input");
       })
       .catch (err => {
-        console.log (err);
+        res.json(error);
       });
   },
   
@@ -31,7 +31,7 @@ module.exports = {
         res.json ("Succes Update");
       })
       .catch (err => {
-        console.log (err);
+        res.json(error);
       });
   },
 
@@ -42,7 +42,7 @@ module.exports = {
         res.json ("Succes Delete");
       })
       .catch (err => {
-        console.log (err);
+        res.json(error);
       });
   },
 
@@ -53,7 +53,7 @@ module.exports = {
         form.formgetProduct (res, 200, response);
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       });
   },
 
@@ -64,7 +64,7 @@ module.exports = {
         form.formgetProduct (res, 200, response);
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       });
   },
 
@@ -75,7 +75,7 @@ module.exports = {
         res.json ("Succes Add Quantity");
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       });
   },
 
@@ -86,7 +86,7 @@ module.exports = {
           res.json (response); 
         })
         .catch (error => {
-          console.log (error);
+          res.json(error);
         });
   },
 

@@ -15,7 +15,7 @@ module.exports = {
   getProduct:req => {
     const Pagination=getPagination(req);
     return new Promise ((resolve, reject) => {
-      let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
+      let query ='SELECT prducts.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
       let set = [Pagination.perpage,Pagination.page];
       query = mysql.format(query, set);
       connection.query (query, (err, response) => {

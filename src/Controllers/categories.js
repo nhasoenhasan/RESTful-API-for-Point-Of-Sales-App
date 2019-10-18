@@ -9,7 +9,7 @@ module.exports = {
         form.successcategories (res, 200, response);
       })
       .catch (error => {
-        console.log (error);
+        res.json(error);
       });
   },
 
@@ -20,7 +20,7 @@ module.exports = {
         res.json ("Succes Input");
       })
       .catch (err => {
-        console.log (err);
+        res.json(err);
       });
   },
 

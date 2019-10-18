@@ -94,7 +94,7 @@ module.exports = {
     productModel
       .orderProduct (req)
       .then (response => {
-        res.json (response); 
+        res.json ("Succes Order"); 
       })
       .catch (error => {
         console.log (error);

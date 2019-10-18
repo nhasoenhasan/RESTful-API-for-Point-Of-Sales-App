@@ -200,7 +200,6 @@ module.exports = {
     let qtyStatus = [];
     
     return new Promise ((resolve, reject) => {
-    //----------------------------------------------------------
       //Maping Data Cek Id Product
       const cekqty =req.body.order.map (item =>[
          item.id_product

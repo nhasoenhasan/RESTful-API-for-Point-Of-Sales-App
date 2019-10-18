@@ -16,6 +16,7 @@ module.exports = {
   postCategories: req => {
     return new Promise ((resolve, reject) => {
       const body = req.body;
+      console.log(body.Categories);
       connection.query (
         'INSERT INTO categories SET Categories=?',
         [body.Categories],

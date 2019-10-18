@@ -50,7 +50,7 @@ module.exports = {
     productModel
       .sortProduct (req)
       .then (response => {
-        form.success (res, 200, response);
+        form.formgetProduct (res, 200, response);
       })
       .catch (error => {
         console.log (error);
@@ -61,7 +61,7 @@ module.exports = {
     productModel
       .searchProduct (req)
       .then (response => {
-        form.success (res, 200, response);
+        form.formgetProduct (res, 200, response);
       })
       .catch (error => {
         console.log (error);
@@ -70,7 +70,7 @@ module.exports = {
 
   addQuantity: (req, res) => {
     productModel
-      .patchProduct (req)
+      .addProduct (req)
       .then (response => {
         res.json ("Succes Add Quantity");
       })

@@ -12,7 +12,6 @@ const getPagination = req => {
 module.exports = {
 
   getPagination,
-  
   getProduct:req => {
     const Pagination=getPagination(req);
     return new Promise ((resolve, reject) => {
@@ -129,7 +128,6 @@ module.exports = {
   },
 
   searchProduct: req => {
-    const Pagination=getPagination(req);
     const name =req.query.keywoard;
     return new Promise ((resolve, reject) => {
       connection.query ('SELECT products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories WHERE name LIKE? ',['%'+name+'%'], (err, response) => {
@@ -142,11 +140,9 @@ module.exports = {
     });
   },
 
-  patchProduct: req => {
+  addProduct: req => {
     const body = req.body;
-
     const id=req.params.id;
-    console.log(id);
     query='UPDATE products SET quantity = quantity + ?  WHERE id_product=?';
     
     return new Promise ((resolve, reject) => {
@@ -154,7 +150,6 @@ module.exports = {
       query,
       [body.quantity,id], (err, response) => {
         if (!err) {
-          //console.log(query,[body.name,body.description,body.image, body.id_categories, body.price,body.quantity,body.id_product]);
           resolve (response);
         } else {
           reject (err);
@@ -172,20 +167,22 @@ module.exports = {
       connection.query (
         cekqty,[id], (err, response) => {
           if (!err) {
-            if (response[0].quantity > body.quantity ) {
-                connection.query (
-                query,
-                [body.quantity,id], (err, response) => {
-                  if (!err) {
-                    resolve (response);
-                  } else {
-                    reject (err);
-                  }
-                });
+            if (response[0].quantity >= body.quantity ) {
+                if (response[0].quantity == 0) {
+                  resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
+                } else {
+                  connection.query (
+                    query,
+                    [body.quantity,id], (err, response) => {
+                      if (!err) {
+                        resolve ("Success Reduce Quantity");
+                      } else {
+                        reject (err);
+                      }
+                    });
+                }
             } else {
-              resolve(
-                'Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+
-                ')');
+              resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
             }
           } else {
             reject (err);
@@ -196,6 +193,7 @@ module.exports = {
 
   orderProduct: req => {
     const total=req.body.total;
+    console.log(req.body.total);
     const insertorder="INSERT INTO `order` SET total=?";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
     const querycekqty="SELECT quantity FROM products WHERE id_product IN (?)"
@@ -228,11 +226,12 @@ module.exports = {
             resolve("Data Quantity is To Much")
           }else{
             connection.query (
+              //Insert Order
               insertorder,[total], (err, response) => {
                 const idorder=response.insertId;
                 //Maping Data Detail Order
                 const detail_order =req.body.order.map(item =>[
-                  idorder,item.id_product,item.quantity,item.sub_total  
+                idorder,item.id_product,item.quantity,item.sub_total  
                 ]);
                 if (!err) {
                   //Insert Detail Order

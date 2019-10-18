@@ -20,7 +20,7 @@ module.exports = {
         res.json ("Succes Input");
       })
       .catch (err => {
-        res.json(error);
+        res.json(err);
       });
   },
   

@@ -1,7 +1,5 @@
 var dateFormat = require ('dateformat');
 
-
-
 module.exports = {
     
     formgetProduct: (res, status, result) => {
@@ -44,6 +42,6 @@ module.exports = {
       res.json (form);
     },
 
-   
+    
   };
   

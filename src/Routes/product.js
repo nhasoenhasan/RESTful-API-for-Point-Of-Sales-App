@@ -2,6 +2,7 @@ const express = require ('express');
 const cors = require('cors');
 
 const productController = require ('../Controllers/product');
+const categoriesController = require ('../Controllers/categories');
 
 const Router = express.Router ();
 
@@ -14,5 +15,10 @@ Router.post('/reduce/:id', productController.reduceProduct);
 Router.post('/order/', productController.orderProduct);
 Router.put ('/', productController.updateProduct);
 Router.delete('/:id', productController.deleteProduct);
+//-----------Categories-----------------
+Router.get ('/categories', categoriesController.getCategories);
+Router.post ('/categories', categoriesController.postCategories);
+Router.put ('/categories', categoriesController.updateCategories);
+Router.delete('/categories/:id', categoriesController.deleteCategories);
 
 module.exports = Router;

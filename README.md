@@ -94,7 +94,7 @@ Each response will be returned with one of the following HTTP status codes:
 Open **.env** file on code editor and copy the code below :
 
 ```
-SERVER_PORT = 8080
+SERVER_PORT = 3000
 
 DB_HOST = 'localhost'
 DB_USER = 'root'
@@ -174,22 +174,25 @@ CREATE TABLE `order` (
             "name": "Tshirt What For",
             "Price": 121500,
             "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Tshirt ",
             "Date_Added": "Fri Oct 18 2019 18:57:44",
-            "Date_Updated": "Fri Oct 18 2019 22:45:24",
-            "Quantity": 26
+            "Date_Updated": "Sat Oct 19 2019 07:48:07",
+            "Quantity": 79
         },
         {
             "name": "Tshirt 100 PERCENT WILD",
             "Price": 121500,
             "Description": "Color : Blue\r\nMaterial : Cotton\r\n",
+            "Category": "Tshirt ",
             "Date_Added": "Fri Oct 18 2019 19:01:45",
-            "Date_Updated": "Fri Oct 18 2019 22:45:24",
-            "Quantity": 30
+            "Date_Updated": "Sat Oct 19 2019 01:39:08",
+            "Quantity": 27
         },
         {
             "name": "Denim Long Pants - SJM 469",
             "Price": 301500,
             "Description": "Color : Navy\r\nMaterial : Denim",
+            "Category": "Long Pants",
             "Date_Added": "Fri Oct 18 2019 19:05:34",
             "Date_Updated": "Fri Oct 18 2019 19:15:13",
             "Quantity": 50
@@ -198,6 +201,7 @@ CREATE TABLE `order` (
             "name": "Cargo Long Pants - SCL 41",
             "Price": 279000,
             "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Long Pants",
             "Date_Added": "Fri Oct 18 2019 19:07:15",
             "Date_Updated": "Fri Oct 18 2019 19:16:13",
             "Quantity": 50
@@ -206,6 +210,7 @@ CREATE TABLE `order` (
             "name": "Jacket - JS 817",
             "Price": 292500,
             "Description": "Color : Orange\r\nMaterial : Parachute",
+            "Category": "Jacket",
             "Date_Added": "Fri Oct 18 2019 19:08:41",
             "Date_Updated": "Fri Oct 18 2019 19:15:26",
             "Quantity": 50
@@ -278,19 +283,186 @@ CREATE TABLE `order` (
 "Succes Delete"
 ```
 
-#### Order Product Endpoint
-
-**Create a New Order** 
-* **Read All Available Books**
-  - **Request** : **`POST /product/order`**
+#### Add/Reduce Product Quantity
+ 
+* **Add Product Quantity**
+  - **Request** : **`POST /product/add/:id`**
   - **Response** :
 ```
-"Succes Order"
-```
-#### **Add/Reduce Product(Quantity)**
+"Succes Add Quantity"
+```  
 
-**Add Product (Quantity)** 
-* **Read All Available Books**
+* **Reduce Product Quantity**
+
+  - **Request** : **`POST /product/reduce/:id`**
+  - **Response** :
+```
+"Succes Reduce Quantity"
+```  
+
+#### Sorting Product By Name,Categories and Date Updated
+
+* **Sorting By Name**
+
+  - **Request** : **`GET /product/sort?sortby=name&&orderby=ASC`**
+  - **Response** :
+```
+{
+    "status": 200,
+    "result": [
+        {
+            "name": "Cargo Long Pants - SCL 41",
+            "Price": 279000,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:07:15",
+            "Date_Updated": "Fri Oct 18 2019 19:16:13"
+        },
+        {
+            "name": "Denim Long Pants - SJM 469",
+            "Price": 301500,
+            "Description": "Color : Navy\r\nMaterial : Denim",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:05:34",
+            "Date_Updated": "Fri Oct 18 2019 19:15:13"
+        },
+        {
+            "name": "Jacket - JS 817",
+            "Price": 292500,
+            "Description": "Color : Orange\r\nMaterial : Parachute",
+            "Category": "Jacket",
+            "Date_Added": "Fri Oct 18 2019 19:08:41",
+            "Date_Updated": "Fri Oct 18 2019 19:15:26"
+        },
+        {
+            "name": "Tshirt 100 PERCENT WILD",
+            "Price": 121500,
+            "Description": "Color : Blue\r\nMaterial : Cotton\r\n",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 19:01:45",
+            "Date_Updated": "Sat Oct 19 2019 01:39:08"
+        },
+        {
+            "name": "Tshirt What For",
+            "Price": 121500,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 18:57:44",
+            "Date_Updated": "Sat Oct 19 2019 07:48:07"
+        }
+    ]
+}
+```
+* **Sorting By Categories**
+
+  - **Request** : **`GET /product/sort?sortby=Categories&&orderby=ASC`**
+  - **Response** :
+```
+{
+    "status": 200,
+    "result": [
+        {
+            "name": "Jacket - JS 817",
+            "Price": 292500,
+            "Description": "Color : Orange\r\nMaterial : Parachute",
+            "Category": "Jacket",
+            "Date_Added": "Fri Oct 18 2019 19:08:41",
+            "Date_Updated": "Fri Oct 18 2019 19:15:26"
+        },
+        {
+            "name": "Denim Long Pants - SJM 469",
+            "Price": 301500,
+            "Description": "Color : Navy\r\nMaterial : Denim",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:05:34",
+            "Date_Updated": "Fri Oct 18 2019 19:15:13"
+        },
+        {
+            "name": "Cargo Long Pants - SCL 41",
+            "Price": 279000,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:07:15",
+            "Date_Updated": "Fri Oct 18 2019 19:16:13"
+        },
+        {
+            "name": "Tshirt What For",
+            "Price": 121500,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 18:57:44",
+            "Date_Updated": "Sat Oct 19 2019 07:48:07"
+        },
+        {
+            "name": "Tshirt 100 PERCENT WILD",
+            "Price": 121500,
+            "Description": "Color : Blue\r\nMaterial : Cotton\r\n",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 19:01:45",
+            "Date_Updated": "Sat Oct 19 2019 01:39:08"
+        }
+    ]
+}
+```
+
+* **Sorting By Date Updated**
+
+  - **Request** : **`GET /product/sort?sortby=date_updated&&orderby=DESC`**
+  - **Response** :
+```
+{
+    "status": 200,
+    "result": [
+        {
+            "name": "Tshirt What For",
+            "Price": 121500,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 18:57:44",
+            "Date_Updated": "Sat Oct 19 2019 07:48:07"
+        },
+        {
+            "name": "Tshirt 100 PERCENT WILD",
+            "Price": 121500,
+            "Description": "Color : Blue\r\nMaterial : Cotton\r\n",
+            "Category": "Tshirt ",
+            "Date_Added": "Fri Oct 18 2019 19:01:45",
+            "Date_Updated": "Sat Oct 19 2019 01:39:08"
+        },
+        {
+            "name": "Cargo Long Pants - SCL 41",
+            "Price": 279000,
+            "Description": "Color : Navy\r\nMaterial : Cotton",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:07:15",
+            "Date_Updated": "Fri Oct 18 2019 19:16:13"
+        },
+        {
+            "name": "Jacket - JS 817",
+            "Price": 292500,
+            "Description": "Color : Orange\r\nMaterial : Parachute",
+            "Category": "Jacket",
+            "Date_Added": "Fri Oct 18 2019 19:08:41",
+            "Date_Updated": "Fri Oct 18 2019 19:15:26"
+        },
+        {
+            "name": "Denim Long Pants - SJM 469",
+            "Price": 301500,
+            "Description": "Color : Navy\r\nMaterial : Denim",
+            "Category": "Long Pants",
+            "Date_Added": "Fri Oct 18 2019 19:05:34",
+            "Date_Updated": "Fri Oct 18 2019 19:15:13"
+        }
+    ]
+}
+```
+
+
+
+
+#### Order Product Endpoint
+ 
+* **Create a New Order**
   - **Request** : **`POST /product/order`**
   - **Response** :
 ```

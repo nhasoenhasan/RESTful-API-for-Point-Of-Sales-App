@@ -10,7 +10,7 @@ module.exports = {
           name: item.name,
           Price:item.price,
           Description:item.description,
-          Category:item.category,
+          Category:item.Categories,
           Price:item.price,
           Date_Added:dateFormat(item.date_added),
           Date_Updated:dateFormat(item.date_updated),

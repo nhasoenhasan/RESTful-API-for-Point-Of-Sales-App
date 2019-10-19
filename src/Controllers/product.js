@@ -99,7 +99,18 @@ module.exports = {
       .catch (error => {
         res.json(error);
       })
-},
+  },
+
+  getByIdProduct: (req, res) => {
+    productModel
+      .getByIdProduct (req)
+      .then (response => {
+        form.formgetProduct (res, 200, response);
+      })
+      .catch (error => {
+        res.json(error);
+      })
+  },
 
   
 };

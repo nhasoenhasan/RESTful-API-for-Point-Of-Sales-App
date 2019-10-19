@@ -13,6 +13,19 @@ module.exports = {
     });
   },
 
+  getByIdCategories: req => {
+    console.log(req.params.id);
+    return new Promise ((resolve, reject) => {
+      connection.query ('SELECT * FROM categories WHERE id_categories=?',req.params.id, (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {
+          reject (err);
+        }
+      });
+    });
+  },
+
   postCategories: req => {
     return new Promise ((resolve, reject) => {
       const body = req.body;

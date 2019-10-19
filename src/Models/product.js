@@ -27,6 +27,20 @@ module.exports = {
       });
     });
   },
+
+  getByIdProduct:req => {
+    return new Promise ((resolve, reject) => {
+      let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories WHERE id_product=?';
+      let id = req.params.id;
+      connection.query (query,id, (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {
+          reject (err);
+        }
+      });
+    });
+  },
   
   postProduct: req => {
     return new Promise ((resolve, reject) => {

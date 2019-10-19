@@ -13,6 +13,17 @@ module.exports = {
       });
   },
 
+  getByIdCategories: (req, res) => {
+    categoriesModel
+      .getByIdCategories (req)
+      .then (response => {
+        form.successcategories (res, 200, response);
+      })
+      .catch (error => {
+        res.json(error);
+      });
+  },
+
   postCategories: (req, res) => {
       categoriesModel
       .postCategories (req)

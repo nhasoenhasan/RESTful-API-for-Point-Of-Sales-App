@@ -1,22 +1,12 @@
 const connection = require ('../Configs/connect');
 var mysql = require('mysql');
 
-const getPagination = req => {
-  let page = parseInt(req.query.page)||1;
-  let perpage = parseInt(req.query.perpage)||10;
-
-  page = (page - 1) * perpage;
-  return{page,perpage}
-}
-
 module.exports = {
 
-  getPagination,
-  getProduct:req => {
-    const Pagination=getPagination(req);
+  getProduct:(page,perpage) => {
     return new Promise ((resolve, reject) => {
       let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
-      let set = [Pagination.perpage,Pagination.page];
+      let set = [perpage,page];
       query = mysql.format(query, set);
       connection.query (query, (err, response) => {
         if (!err) {
@@ -137,7 +127,6 @@ module.exports = {
           }
         )
       }
-      //throw new Error(sql);
     });
   },
 
@@ -183,7 +172,7 @@ module.exports = {
           if (!err) {
             if (response[0].quantity >= body.quantity ) {
                 if (response[0].quantity == 0) {
-                  reject('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
+                  resolve('Qty Insert Is Zero (0)');
                 } else {
                   connection.query (
                     query,
@@ -196,7 +185,7 @@ module.exports = {
                     });
                 }
             } else {
-              reject('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
+              resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
             }
           } else {
             reject (err);
@@ -235,7 +224,7 @@ module.exports = {
           });
           //Insert Order
           if (qtyStatus.includes('false')) {
-            reject ("Data Insert Is To Much");
+            resolve ("Value Quantity Product Insert Is More Higher Than Data Availabel");
           }else{
             connection.query (
               //Insert Order
@@ -250,7 +239,7 @@ module.exports = {
                   connection.query (
                     insertdetail,[detail_order], (err, response) => {
                       if (!err) {
-                        resolve(response);
+                        resolve("Succes Make Order");
                       } else {
                         reject (err);
                       }

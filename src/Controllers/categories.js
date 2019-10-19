@@ -3,21 +3,15 @@ const form = require ('../Helpers/form');
 
 module.exports = {
   getCategories: (req, res) => {
+    //Count Page
+    let page = parseInt(req.query.page)||1;
+    let perpage = parseInt(req.query.perpage)||10;
+    let currentpage=page;
+    page = (page - 1) * perpage;
     categoriesModel
-      .getCategories ()
+      .getCategories (page,perpage)
       .then (response => {
-        form.successcategories (res, 200, response);
-      })
-      .catch (error => {
-        res.json(error);
-      });
-  },
-
-  getByIdCategories: (req, res) => {
-    categoriesModel
-      .getByIdCategories (req)
-      .then (response => {
-        form.successcategories (res, 200, response);
+        form.successcategories (res, 200, response,currentpage,perpage);
       })
       .catch (error => {
         res.json(error);
@@ -28,7 +22,7 @@ module.exports = {
       categoriesModel
       .postCategories (req)
       .then (response => {
-        res.json ("Succes Input");
+        form.successResponse (res, 200,"Succes Input");
       })
       .catch (err => {
         res.json(err);
@@ -39,22 +33,21 @@ module.exports = {
     categoriesModel
       .updateCategories (req)
       .then (response => {
-        res.json ("Succes Update");
+        form.successResponse (res, 200,"Succes Update");
       })
       .catch (err => {
-        console.log (err);
+        res.json(error);
       });
   },
 
   deleteCategories: (req, res) => {
-    console.log(req.params.id);
     categoriesModel
       .deleteCategories (req.params.id)
       .then (response => {
-        res.json ("Succes Delete");
+        form.successResponse (res, 200,"Succes Delete");
       })
       .catch (err => {
-        console.log (err);
+        res.json(error);
       });
   },
 };

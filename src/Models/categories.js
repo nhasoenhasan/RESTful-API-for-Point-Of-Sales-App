@@ -1,9 +1,11 @@
 const connection = require ('../Configs/connect');
 module.exports = {
 
-  getCategories: () => {
+  getCategories: (page,perpage) => {
     return new Promise ((resolve, reject) => {
-      connection.query ('SELECT * FROM categories', (err, response) => {
+      
+      console.log("cek");
+      connection.query ('SELECT * FROM categories limit ? OFFSET ?',[perpage,page], (err, response) => {
         if (!err) {
           resolve (response);
         } else {

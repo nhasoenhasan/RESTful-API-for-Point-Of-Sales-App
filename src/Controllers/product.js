@@ -2,22 +2,30 @@ const productModel = require ('../Models/product');
 const form = require ('../Helpers/form');
 
 module.exports = {
+
+  //Get Product 
   getProducts: (req, res) => {
+    //Count Page
+    let page = parseInt(req.query.page)||1;
+    let perpage = parseInt(req.query.perpage)||10;
+    let currentpage=page;
+    page = (page - 1) * perpage;
     productModel
-      .getProduct (req)
+      .getProduct (page,perpage)
       .then (response => {
-        form.formgetProduct (res, 200, response);
+        form.formgetProduct (res, 200, response,currentpage,perpage);
       })
       .catch (error => {
         res.json(error);
       });
   },
 
+  //Insert Product
   postProduct: (req, res) => {
     productModel
       .postProduct (req)
       .then (response => {
-        res.json ("Succes Input");
+        form.successResponse (res, 200,"Succes Input");
       })
       .catch (err => {
         res.json(err);
@@ -28,7 +36,7 @@ module.exports = {
     productModel
       .updateProduct (req)
       .then (response => {
-        res.json ("Succes Update");
+        form.successResponse (res, 200,"Succes Update");
       })
       .catch (err => {
         res.json(error);
@@ -39,7 +47,7 @@ module.exports = {
     productModel
       .deleteProduct (req.params.id)
       .then (response => {
-        res.json ("Succes Delete");
+        form.successResponse (res, 200,"Succes Delete");
       })
       .catch (err => {
         res.json(error);
@@ -61,7 +69,12 @@ module.exports = {
     productModel
       .searchProduct (req)
       .then (response => {
-        form.formgetProduct (res, 200, response);
+        console.log(response);
+        if (response=='') {
+          form.failedResponse (res, 400, 'product does not exist');
+        } else {
+          form.formgetProduct (res, 200, response);
+        }
       })
       .catch (error => {
         res.json(error);
@@ -69,32 +82,48 @@ module.exports = {
   },
 
   addQuantity: (req, res) => {
-    productModel
+    qty=req.body.quantity
+    if (qty < 0) {
+      form.failedResponse(res,400,'Cannot Add Quantity With Value Below 0')
+    } else {
+      productModel
       .addProduct (req)
       .then (response => {
-        res.json ("Succes Add Quantity");
+        form.successResponse (res, 200,"Succes Add Quantity");
       })
       .catch (error => {
         res.json(error);
       });
+    }
   },
 
   reduceProduct: (req, res) => {
+       qty=req.body.quantity
+    if (qty < 0) {
+      form.failedResponse(res,400,'Cannot Reduce Quantity With Value Below 0')
+    }else{
       productModel
         .reduceProduct (req)
         .then (response => {
-          res.json (response); 
+          let form = {
+            message: response,
+          };
+          res.json (form); 
         })
         .catch (error => {
           res.json(error);
         });
+    }
   },
 
   orderProduct: (req, res) => {
     productModel
       .orderProduct (req)
       .then (response => {
-        res.json ("Succes Order"); 
+        let form = {
+          message: response,
+        };
+        res.json (form);  
       })
       .catch (error => {
         res.json(error);
@@ -105,7 +134,11 @@ module.exports = {
     productModel
       .getByIdProduct (req)
       .then (response => {
-        form.formgetProduct (res, 200, response);
+        if (response=='') {
+          form.failedResponse (res, 400, 'product does not exist');
+        } else {
+          form.formgetProduct (res, 200, response);
+        }
       })
       .catch (error => {
         res.json(error);

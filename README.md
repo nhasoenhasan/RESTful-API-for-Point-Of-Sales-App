@@ -104,7 +104,7 @@ DB_NAME = 'pos'
 ## Setup Database
 You can write this code below on your Terminal with mysql cli or import it to **phpmyadmin**.
 
-Create Database named **rent-book** :
+Create Database named **pos** :
 
 ```
 CREATE DATABASE pos;

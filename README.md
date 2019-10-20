@@ -76,7 +76,7 @@ Each response will be returned with one of the following HTTP status codes:
 | :---- | :------------------- | :---------------------------------------------------------------------------------- |
 | `200` | `OK`                 | The request was successful                                                          |
 | `400` | `Bad Request`        | There was a problem with the request (security, malformed, data validation, etc.)   |
-|
+
 
 ## Installation
 

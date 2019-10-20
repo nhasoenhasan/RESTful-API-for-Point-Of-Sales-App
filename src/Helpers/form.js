@@ -23,7 +23,7 @@ module.exports = {
           result: format,
           page:currentpage,
           from:total,
-          item:perpage
+          perpage:perpage
         };
         res.json (form);
       
@@ -46,7 +46,8 @@ module.exports = {
       res.json (form);
     },
 
-    successcategories: (res, status, result,currentpage,perpage) => {
+    //GET Categories 
+    successcategories: (res, status, result,currentpage,perpage,total) => {
       
       let format = result.map (item => {
         return {
@@ -59,9 +60,26 @@ module.exports = {
         status,
         result: format,
         page:currentpage,
+        from:total,
         perpage:perpage
       };
+      res.json (form);
+    },
 
+    //Succes Register 
+    successRegister: (res, status, result) => {
+      
+      let format = result.map (item => {
+        return {
+          username:item.username,
+          password:item.password
+        };
+      });
+
+      let form = {
+        status,
+        result: format
+      };
       res.json (form);
     },
 

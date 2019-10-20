@@ -13,7 +13,7 @@ This documentation outlines the Point of Sales API functionality.
 
 ## Built With
 
-[![Express.js](https://img.shields.io/badge/Express.js-4.x-orange.svg?style=rounded-square)](https://expressjs.com/en/starter/installing.html) [![Node.js](https://img.shields.io/badge/Node.js-v.10.16-green.svg?style=rounded-square)](https://nodejs.org/) [![MySQL](https://img.shields.io/badge/mysql-v2..17.2-blue)](https://www.npmjs.com/search?q=mysql) [![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-v8.x-critical)](https://www.npmjs.com/package/jsonwebtoken)
+[![Node.js](https://img.shields.io/badge/Node.js-v.10.16.2-green.svg?style=flat-square&logo=appveyor)](https://nodejs.org/) [![Express.js](https://img.shields.io/badge/Express.js-4.x-orange.svg?style=flat-square&logo=appveyor)](https://expressjs.com/en/starter/installing.html) [![MySQL](https://img.shields.io/badge/mysql-v2.17.1-blue?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/mysql) [![body-parser](https://img.shields.io/badge/body--parser-v1.19.0-red?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/body-parser) [![morgan](https://img.shields.io/badge/morgan-v1.9.1-success?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/body-parser) [![dotenv](https://img.shields.io/badge/dotenv-v1.9.1-black?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/dotenv) [![cors](https://img.shields.io/badge/cors-v2.8.5-blueviolet?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/cors) [![jsonwebtoken](https://img.shields.io/badge/jsonwebtoken-v8.5.1-blue?style=flat-square&logo=appveyor)](https://www.npmjs.com/package/jsonwebtoken)
 
 ## Requirements
 
@@ -109,7 +109,14 @@ Create Database named **rent-book** :
 ```
 CREATE DATABASE pos;
 ```
-
+Create Table user **products** :
+```
+CREATE TABLE `user` (
+  `id_user` int(11) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `password` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+```
 Create Table named **products** :
 
 ```
@@ -156,13 +163,64 @@ CREATE TABLE `order` (
   `total` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```
-
+## Setup Database
+You can import file **`database.sql`** to **phpmyadmin**.
 
 ## Endpoints
 
-#### **Product**
+**IMPORTANT!** All endpoint except **Login** and **Register** must have **header** :
 
-#### **CRUD product Endpoint**
+- **Content-Type** : **`application/json`**
+- **x-access-token**: **`token`**
+
+#### **Homepage**
+
+- **Request** : **`GET /`**
+- **Response** :
+
+    ```
+       {
+            "message": "Welcome to Point Of Sales RESTful API",
+            "author": "Nur Hasan",
+            "login": "If you already have an account, please login",
+            "register": "Register your account today to use Point Of Sales RESTful API"
+        }
+    ```
+
+#### **User**
+* **Register user**
+  - **Request** : **`POST /auth/register`**
+
+  - **Response** : 
+    ```
+    {
+        "status": 200,
+        "result": [
+            {
+                "username": "hasan",
+                "password": "$2a$10$gxAl1.VsTPcylcrYV8o66O8/ctZe3r5L/N3wciu5G9dziETVOtB5i"
+            }
+        ]
+    }
+    ```
+* **Login User**
+  - **Request** : **`POST /user/login`**
+  - **Response** : 
+    ```
+    {
+        {
+            "status": 200,
+            "username": "hasan",
+            "password": "$2a$10$gxAl1.VsTPcylcrYV8o66O8/ctZe3r5L/N3wciu5G9dziETVOtB5i",
+            "message": "Succes Login, Hello hasan",
+            "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNTcxNTc2OTQ5LCJleHAiOjE1NzE1ODA1NDl9.0kwh53Y6vbRz0xDKQa4r9SUS9RiQz7kn5vuBaVFO4lQ"
+        }
+    }
+    ```
+
+## Endpoints
+
+### **CRUD product Endpoint**
 * **Read All product**
   - **Request** : **`GET product`**
   - **Response** :
@@ -176,8 +234,8 @@ CREATE TABLE `order` (
             "Description": "Color : Navy\r\nMaterial : Cotton",
             "Category": "Tshirt ",
             "Date_Added": "Fri Oct 18 2019 18:57:44",
-            "Date_Updated": "Sat Oct 19 2019 07:48:07",
-            "Quantity": 79
+            "Date_Updated": "Sat Oct 19 2019 23:02:20",
+            "Quantity": 199
         },
         {
             "name": "Tshirt 100 PERCENT WILD",
@@ -185,17 +243,8 @@ CREATE TABLE `order` (
             "Description": "Color : Blue\r\nMaterial : Cotton\r\n",
             "Category": "Tshirt ",
             "Date_Added": "Fri Oct 18 2019 19:01:45",
-            "Date_Updated": "Sat Oct 19 2019 01:39:08",
-            "Quantity": 27
-        },
-        {
-            "name": "Denim Long Pants - SJM 469",
-            "Price": 301500,
-            "Description": "Color : Navy\r\nMaterial : Denim",
-            "Category": "Long Pants",
-            "Date_Added": "Fri Oct 18 2019 19:05:34",
-            "Date_Updated": "Fri Oct 18 2019 19:15:13",
-            "Quantity": 50
+            "Date_Updated": "Sat Oct 19 2019 23:02:20",
+            "Quantity": 9
         },
         {
             "name": "Cargo Long Pants - SCL 41",
@@ -207,37 +256,103 @@ CREATE TABLE `order` (
             "Quantity": 50
         },
         {
-            "name": "Jacket - JS 817",
-            "Price": 292500,
-            "Description": "Color : Orange\r\nMaterial : Parachute",
-            "Category": "Jacket",
-            "Date_Added": "Fri Oct 18 2019 19:08:41",
-            "Date_Updated": "Fri Oct 18 2019 19:15:26",
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sat Oct 19 2019 21:59:28",
+            "Date_Updated": "Sat Oct 19 2019 21:59:28",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sat Oct 19 2019 22:13:14",
+            "Date_Updated": "Sat Oct 19 2019 22:13:14",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sun Oct 20 2019 14:44:19",
+            "Date_Updated": "Sun Oct 20 2019 14:44:19",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sun Oct 20 2019 14:44:23",
+            "Date_Updated": "Sun Oct 20 2019 14:44:23",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sun Oct 20 2019 14:44:25",
+            "Date_Updated": "Sun Oct 20 2019 14:44:25",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sun Oct 20 2019 14:44:27",
+            "Date_Updated": "Sun Oct 20 2019 14:44:27",
+            "Quantity": 50
+        },
+        {
+            "name": "Star",
+            "Price": 200,
+            "Description": "Code : WMS 336 Color : Black",
+            "Category": "Long Pants",
+            "Date_Added": "Sun Oct 20 2019 14:44:28",
+            "Date_Updated": "Sun Oct 20 2019 14:44:28",
             "Quantity": 50
         }
-    ]
+    ],
+    "page": 1,
+    "from": 2,
+    "perpage": 10
 }
 ```
 * **Create a product** 
   - **Request** : **`POST /product`**
   - **Response** :
 ```
-"Succes Input"
+{
+    "status": 200,
+    "message": "Succes Input"
+}
 ```
 * **Update a product** 
   - **Request** : **`PUT/product/`**
   - **Response** :
 ```
-"Succes Update"
+{
+    "status": 200,
+    "message": "Succes Update"
+}
 ```
 * **Delete a product**
   - **Request** : **`DELETE /product/:id`**
   - **Response** : 
 ```
-"Succes Delete"
+{
+    "status": 200,
+    "message": "Succes Delete"
+}
 ```
 
-#### CRUD Categories Endpoint
+### CRUD **Categories Endpoint**
 * **Read All Categories**
   - **Request** : **`GET /product/categories`**
   - **Response** :
@@ -256,31 +371,39 @@ CREATE TABLE `order` (
         {
             "id": 669,
             "Categories": "Jacket"
-        },
-        {
-            "id": 670,
-            "Categories": "asas"
         }
-    ]
+    ],
+    "page": 1,
+    "from": 1,
+    "perpage": 10
 }
 ```
 * **Create a categories**
   - **Request** : **`POST /product/categories`**
   - **Response** :
 ```
-"Succes Input"
+{
+    "status": 200,
+    "message": "Succes Input"
+}
 ```
 * **Update a categories**
-  - **Request** : **`PATCH /product/categories`**
+  - **Request** : **`PUT /product/categories`**
   - **Response** :
 ```
-"Succes Update"
+{
+    "status": 200,
+    "message": "Succes Update"
+}
 ```
 * **Delete a categories** 
   - **Request** : **`DELETE /product/categories`**
   - **Response** :
 ```
-"Succes Delete"
+{
+    "status": 200,
+    "message": "Succes Delete"
+}
 ```
 
 #### Add/Reduce Product Quantity
@@ -289,7 +412,10 @@ CREATE TABLE `order` (
   - **Request** : **`POST /product/add/:id`**
   - **Response** :
 ```
-"Succes Add Quantity"
+{
+    "status": 200,
+    "message": "Succes Add Quantity"
+}
 ```  
 
 * **Reduce Product Quantity**
@@ -297,7 +423,9 @@ CREATE TABLE `order` (
   - **Request** : **`POST /product/reduce/:id`**
   - **Response** :
 ```
-"Succes Reduce Quantity"
+{
+    "message": "Success Reduce Quantity"
+}
 ```  
 
 #### Sorting Product By Name,Categories and Date Updated
@@ -466,7 +594,9 @@ CREATE TABLE `order` (
   - **Request** : **`POST /product/order`**
   - **Response** :
 ```
-"Succes Order"
+{
+    "message": "Succes Make Order"
+}
 ```
 ### Support
 

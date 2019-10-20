@@ -16,6 +16,19 @@ module.exports = {
     });
   },
 
+  selectUser:() => {
+    return new Promise ((resolve, reject) => {
+      const query ='SELECT * FROM user';
+      connection.query (query, (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {    
+          reject (err);
+        }
+      });
+    });
+  },
+
   signinUser:(username) => {
     return new Promise ((resolve, reject) => {
       const query ='SELECT * FROM  user WHERE username=?';

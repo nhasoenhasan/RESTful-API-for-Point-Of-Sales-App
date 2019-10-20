@@ -11,7 +11,16 @@ module.exports = {
     categoriesModel
       .getCategories (page,perpage)
       .then (response => {
-        form.successcategories (res, 200, response,currentpage,perpage);
+        return categoriesModel
+        .getCount ()
+        .then (count => {
+          let total=Math.ceil(count[0].total/perpage)
+          form.successcategories (res, 200, response,currentpage,perpage,total);
+        })
+        .catch (error => {
+          console.log(error)
+          res.json(error);
+        });
       })
       .catch (error => {
         res.json(error);

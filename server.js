@@ -16,6 +16,6 @@ server.listen (port, () => {
 server.use (logger ('dev'));
 server.use (bodyParser.json ());
 server.use (bodyParser.urlencoded ({extended: false}));
-server.use ('/', Router);
+server.use ('/pos', Router);
 
 module.exports = server;

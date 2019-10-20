@@ -15,7 +15,15 @@ module.exports = {
     userModel
       .registerUser (username,password)
       .then (response => {
-        form.successResponse(res, 200, "Succes Register New User");
+        console.log(response)
+        return userModel
+        .selectUser ()
+        .then (select => {
+          form.successRegister(res, 200,select);
+        })
+        .catch (error => {
+          res.json(error);
+        });
       })
       .catch (error => {
         res.json(error);

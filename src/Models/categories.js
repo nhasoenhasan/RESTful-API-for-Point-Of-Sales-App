@@ -1,10 +1,23 @@
 const connection = require ('../Configs/connect');
+var mysql = require('mysql');
 module.exports = {
+
+  getCount:() => {
+    return new Promise ((resolve, reject) => {
+      let query ='SELECT COUNT(*) AS total FROM categories';
+      query = mysql.format(query);
+        connection.query (query, (err, response) => {
+          if (!err) {
+            resolve (response);
+          } else {
+            reject (err);
+          }
+          });
+      });
+  },
 
   getCategories: (page,perpage) => {
     return new Promise ((resolve, reject) => {
-      
-      console.log("cek");
       connection.query ('SELECT * FROM categories limit ? OFFSET ?',[perpage,page], (err, response) => {
         if (!err) {
           resolve (response);

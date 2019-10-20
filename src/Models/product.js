@@ -1,21 +1,36 @@
 const connection = require ('../Configs/connect');
 var mysql = require('mysql');
 
+
 module.exports = {
+
+  getCount:() => {
+    return new Promise ((resolve, reject) => {
+      let query ='SELECT COUNT(*) AS total FROM products';
+      query = mysql.format(query);
+        connection.query (query, (err, response) => {
+          if (!err) {
+            resolve (response);
+          } else {
+            reject (err);
+          }
+          });
+      });
+  },
 
   getProduct:(page,perpage) => {
     return new Promise ((resolve, reject) => {
       let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
       let set = [perpage,page];
       query = mysql.format(query, set);
-      connection.query (query, (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {
-          reject (err);
-        }
+        connection.query (query, (err, response) => {
+          if (!err) {
+            resolve (response);
+          } else {
+            reject (err);
+          }
+          });
       });
-    });
   },
 
   getByIdProduct:req => {

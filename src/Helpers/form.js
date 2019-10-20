@@ -2,7 +2,7 @@ var dateFormat = require ('dateformat');
 
 module.exports = {
     //GET PRODUCT FORM
-    formgetProduct: (res, status, result,currentpage,perpage) => {
+    formgetProduct: (res, status, result,currentpage,perpage,total) => {
       
         let format = result.map (item => {
           return {
@@ -22,7 +22,8 @@ module.exports = {
           status,
           result: format,
           page:currentpage,
-          perpage:perpage
+          from:total,
+          item:perpage
         };
         res.json (form);
       

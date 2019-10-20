@@ -1,11 +1,13 @@
 const productModel = require ('../Models/product');
 const form = require ('../Helpers/form');
 
+
 module.exports = {
 
+  
   //Get Product 
   getProducts: (req, res) => {
-    //Count Page
+    //Pagination
     let page = parseInt(req.query.page)||1;
     let perpage = parseInt(req.query.perpage)||10;
     let currentpage=page;
@@ -13,7 +15,15 @@ module.exports = {
     productModel
       .getProduct (page,perpage)
       .then (response => {
-        form.formgetProduct (res, 200, response,currentpage,perpage);
+          return productModel 
+          .getCount ()
+          .then (count => {
+            let total=Math.ceil(count[0].total/perpage)
+            form.formgetProduct (res, 200, response,currentpage,perpage,total);
+          })
+          .catch (error => {
+            res.json(error);
+          });
       })
       .catch (error => {
         res.json(error);

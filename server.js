@@ -5,14 +5,14 @@ const cors = require('cors');
 const bodyParser = require ('body-parser');
 const Router = require ('./src/Routes/index');
 const server = express ();
-let port = 7000;
+const port = process.env.PORT||'8080';;
 const nodeEnv = 'Development';
 
 server.use(cors());
 
 
-server.listen (port || 3000, () => {
-  console.log("Express server listening on port %d in %s mode", this.address().port, port);
+server.listen (port, () => {
+  console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
 });
 server.use (logger ('dev'));
 server.use (bodyParser.json ());

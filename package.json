@@ -4,7 +4,7 @@
   "description": "Task Week 1 - Point of Sales App",
   "main": "server.js",
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js"
   },
   "author": "Nur Hasan",
   "license": "ISC",

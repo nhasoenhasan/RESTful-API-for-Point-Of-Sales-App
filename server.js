@@ -10,8 +10,12 @@ const nodeEnv = 'Development';
 
 server.use(cors());
 
-server.listen (port, () => {
-  console.log (`Server is running in port ${port} in ${nodeEnv} Mode`);
+// app.listen(port|| 3000, function(){
+//   console.log("Express server listening on port %d in %s mode", this.address().port, port);
+// });
+
+server.listen (port || 3000, () => {
+  console.log("Express server listening on port %d in %s mode", this.address().port, port);
 });
 server.use (logger ('dev'));
 server.use (bodyParser.json ());

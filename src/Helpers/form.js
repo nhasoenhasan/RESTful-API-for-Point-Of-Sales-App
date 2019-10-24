@@ -71,13 +71,13 @@ module.exports = {
       
       let format = result.map (item => {
         return {
-          username:item.username,
-          password:item.password
+          username:item.username
         };
       });
 
       let form = {
         status,
+        message:"Succes Register",
         result: format
       };
       res.json (form);

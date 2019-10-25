@@ -25,7 +25,7 @@ Router.get('/', (req, res) => {
     });
 })
 
-Router.use ('/product', product);
+Router.use ('/product',validateUser, product);
 Router.use('/auth',auth);
 
 module.exports = Router;

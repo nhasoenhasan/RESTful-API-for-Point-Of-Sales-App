@@ -12,8 +12,8 @@ module.exports = {
             Description:item.description,
             Category:item.Categories,
             Price:item.price,
-            Date_Added:dateFormat(item.date_added),
-            Date_Updated:dateFormat(item.date_updated),
+            Date_Added:item.date_added,
+            Date_Updated:item.date_updated,
             Quantity :item.quantity
           };
         });

@@ -1,24 +1,13 @@
 const connection = require ('../Configs/connect');
 var mysql = require('mysql');
+const query='SELECT * FROM categories'
+
 module.exports = {
-
-  getCount:() => {
+  
+  //Get Categories
+  getCategories: (queryLimit) => {
     return new Promise ((resolve, reject) => {
-      let query ='SELECT COUNT(*) AS total FROM categories';
-      query = mysql.format(query);
-        connection.query (query, (err, response) => {
-          if (!err) {
-            resolve (response);
-          } else {
-            reject (err);
-          }
-          });
-      });
-  },
-
-  getCategories: (page,perpage) => {
-    return new Promise ((resolve, reject) => {
-      connection.query ('SELECT * FROM categories limit ? OFFSET ?',[perpage,page], (err, response) => {
+      connection.query (`${query} ${queryLimit}`, (err, response) => {
         if (!err) {
           resolve (response);
         } else {
@@ -28,26 +17,23 @@ module.exports = {
     });
   },
 
-  getByIdCategories: req => {
-    console.log(req.params.id);
-    return new Promise ((resolve, reject) => {
-      connection.query ('SELECT * FROM categories WHERE id_categories=?',req.params.id, (err, response) => {
+  //Check Categories
+  checkCategories: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`${query} WHERE id_categories=?`,id, (err, result) => {
         if (!err) {
-          resolve (response);
+          resolve(result)
         } else {
-          reject (err);
+          reject(result)
         }
-      });
-    });
+      })
+    })
   },
 
-  postCategories: req => {
+  //INSERT Categories
+  postCategories: (data) => {
     return new Promise ((resolve, reject) => {
-      const body = req.body;
-      console.log(body.Categories);
-      connection.query (
-        'INSERT INTO categories SET Categories=?',
-        [body.Categories],
+      connection.query ('INSERT INTO categories SET ?',data,
         (err, response) => {
           if (!err) {
             resolve (response);
@@ -59,12 +45,14 @@ module.exports = {
     });
   },
 
-  updateCategories: req => {
+  //Update Categories
+  updateCategories: (data,id) => {
     return new Promise ((resolve, reject) => {
-      const body = req.body;
       connection.query (
-        'UPDATE categories SET Categories=? WHERE id_categories=?',
-        [body.Categories,body.id_categories],
+        'UPDATE categories SET ? WHERE id_categories=?',[
+          data,
+          id
+        ],
         (err, response) => {
           if (!err) {
             resolve (response);
@@ -76,6 +64,7 @@ module.exports = {
     });
   },
 
+  //Delete Categories
   deleteCategories: (id) => {
     return new Promise ((resolve, reject) => {
       connection.query (

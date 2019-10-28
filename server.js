@@ -5,7 +5,7 @@ const cors = require('cors');
 const bodyParser = require ('body-parser');
 const Router = require ('./src/Routes/index');
 const server = express ();
-const port = 3000;
+const port =process.env.PORT||'8080';
 const nodeEnv = 'Development';
 
 

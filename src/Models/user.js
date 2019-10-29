@@ -6,7 +6,7 @@ module.exports = {
   registerCheck:(data) => {
     return new Promise ((resolve, reject) => {
       const query ='SELECT * FROM user WHERE username=? OR email=?';
-      connection.query (query,[data.username,data.password], (err, response) => {
+      connection.query (query,[data.username,data.email], (err, response) => {
         if (!err) {
           resolve (response);
         } else {    

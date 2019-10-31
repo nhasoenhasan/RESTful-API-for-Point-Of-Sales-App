@@ -53,14 +53,14 @@ module.exports = {
       image: req.body.image,
       id_categories: req.body.id_categories,
       price: req.body.price,
-      quantity: req.body.quantity
+      quantity: req.body.quantity,
     }
     productModel
       .postProduct (data)
       .then (result => res.json({
         status:200,
         message:'Product has successfully added!',
-        data
+        result
       }))
       .catch (err => {
         console.log(err);
@@ -88,7 +88,7 @@ module.exports = {
               status: 200,
               message: 'Product has successfully updated',
               id,
-              data
+              result
             }))
             .catch(err => console.log(err))
         } else {

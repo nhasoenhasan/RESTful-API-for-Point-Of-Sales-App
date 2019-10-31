@@ -47,11 +47,21 @@ module.exports = {
     //INSERT PRODUCT
     postProduct: (data) => {
       return new Promise ((resolve, reject) => {
-        connection.query (
-          'INSERT INTO products SET ?',data,
+        connection.query ('INSERT INTO products SET ?',data,
           (err, response) => {
             if (!err) {
-              resolve (response);
+              //SELECT DATA 
+              const id_product=response.insertId
+              connection.query ('SELECT * FROM products WHERE id_product=?',id_product,
+                (err, result) => {
+                  if (!err) {
+                    //SELECT DATA 
+                    resolve (result);
+                  } else {
+                    reject (err);
+                  }
+                }
+              );
             } else {
               reject (err);
             }
@@ -69,7 +79,17 @@ module.exports = {
         ],
           (err, response) => {
             if (!err) {
-              resolve (response);
+              //SELECT DATA 
+              connection.query ('SELECT * FROM products WHERE id_product=?',id,
+                (err, result) => {
+                  if (!err) {
+                    //SELECT DATA 
+                    resolve (result);
+                  } else {
+                    reject (err);
+                  }
+                }
+              );
             } else {
               reject (err);
             }

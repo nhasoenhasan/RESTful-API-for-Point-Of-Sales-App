@@ -127,12 +127,14 @@ module.exports = {
 
   //Get Categories 
   getCategories: (req, res) => {
+    
     const numPerPage = parseInt(req.query.limit) || null
     const activePage = req.query.page || 1
     const beginData = numPerPage * (activePage - 1)
     const queryLimit = (numPerPage !== null) ? `LIMIT ${beginData},${numPerPage}` : ''
 
     categoriesModel.getCategories (queryLimit)
+   
       .then (result =>res.json({
         status:200,
         totalData: result.length,
@@ -190,7 +192,7 @@ module.exports = {
     .catch(err => console.log(err))
   },
 
-  //UPDATE CATEGORIES
+  //DELETE CATEGORIES
   deleteCategories: (req, res) => {
 
     const id = req.params.id

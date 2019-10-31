@@ -7,6 +7,7 @@ module.exports = {
   //Get Categories
   getCategories: (queryLimit) => {
     return new Promise ((resolve, reject) => {
+      
       connection.query (`${query} ${queryLimit}`, (err, response) => {
         if (!err) {
           resolve (response);

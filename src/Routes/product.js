@@ -6,7 +6,7 @@ const Router = express.Router ();
 Router
     //Product CRUD
     .get ('/', productController.getProducts)
-    .get ('/:id', productController.getbyidProducts)
+    //.get ('/:id', productController.getbyidProducts)
     .post ('/', productController.insertProduct)
     .patch ('/:id', productController.updateProduct)
     .delete('/:id', productController.deleteProduct)

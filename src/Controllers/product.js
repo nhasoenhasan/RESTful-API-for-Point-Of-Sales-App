@@ -156,7 +156,7 @@ module.exports = {
       .then (result => res.json({
         status:200,
         message:'Categories has successfully added!',
-        data
+        result:result
       }))
       .catch (err => {
         console.log(err);
@@ -177,8 +177,7 @@ module.exports = {
             .then(result => res.json({
               status: 200,
               message: 'Categories has successfully updated',
-              id,
-              data
+              result
             }))
             .catch(err => console.log(err))
         } else {

@@ -37,7 +37,16 @@ module.exports = {
       connection.query ('INSERT INTO categories SET ?',data,
         (err, response) => {
           if (!err) {
-            resolve (response);
+            const id_categories=response.insertId
+            connection.query ('SELECT * FROM categories WHERE id_categories =?',id_categories,
+              (err, result) => {
+                if (!err) {
+                  resolve (result);
+                } else {
+                  reject (err);
+                }
+              }
+            );
           } else {
             reject (err);
           }
@@ -56,7 +65,15 @@ module.exports = {
         ],
         (err, response) => {
           if (!err) {
-            resolve (response);
+            connection.query ('SELECT * FROM categories WHERE id_categories =?',id,
+              (err, result) => {
+                if (!err) {
+                  resolve (result);
+                } else {
+                  reject (err);
+                }
+              }
+            );
           } else {
             reject (err);
           }

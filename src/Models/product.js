@@ -1,6 +1,6 @@
 const connection = require ('../Configs/connect');
 var mysql = require('mysql');
-const joinTable ='SELECT products.id_product,products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories'
+const joinTable ='SELECT products.id_product,products.quantity,products.name,products.description,products.image,categories.Categories,categories.id_categories,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories'
 
 module.exports = {
 
@@ -52,7 +52,7 @@ module.exports = {
             if (!err) {
               //SELECT DATA 
               const id_product=response.insertId
-              connection.query ('SELECT * FROM products WHERE id_product=?',id_product,
+              connection.query (`${joinTable} WHERE id_product=?`,id_product,
                 (err, result) => {
                   if (!err) {
                     //SELECT DATA 
@@ -80,7 +80,7 @@ module.exports = {
           (err, response) => {
             if (!err) {
               //SELECT DATA 
-              connection.query ('SELECT * FROM products WHERE id_product=?',id,
+              connection.query (`${joinTable} WHERE id_product=?`,id,
                 (err, result) => {
                   if (!err) {
                     //SELECT DATA 

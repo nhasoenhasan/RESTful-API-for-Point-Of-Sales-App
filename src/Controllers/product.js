@@ -297,14 +297,21 @@ module.exports = {
   //Make Order
   orderProduct: (req, res) => {
     let qtyStatus = [];
+    let newOrder = Object.values(req.body.body.order)
+    let id_product=[];
+    let qtyinsert=[];
+
     //Maping Data Cek Id Product
-    const id_product =req.body.order.map (item =>[
-      item.id_product
-    ]);
-      //Maping  Data Quantity 
-    const qtyinsert=req.body.order.map (item =>[
-      item.quantity
-    ]);
+    newOrder.forEach(function (item) {
+      id_product.push(item.id_product)
+    });
+
+    //Maping  Data Quantity 
+    newOrder.map (item =>{
+      qtyinsert.push(item.quantity)
+    });
+
+    console.log(id_product)
     //Cek Quantity
     productModel.checkQuantityorder (id_product)
       .then (response => {

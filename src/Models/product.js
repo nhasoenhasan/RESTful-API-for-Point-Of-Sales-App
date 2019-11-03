@@ -167,21 +167,23 @@ module.exports = {
 
   //Make Order
   insertOrder: req => {
-    const insertorder="INSERT INTO `order` SET total=?";
+    const insertorder="INSERT INTO `order`(`total`) VALUES ?";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
-    const total=req.body.total;
-    
+    const total=req.body.body.subtotal.sub_total;
+
+     console.log("DATA>",total)
     return new Promise((resolve, reject) => {
       connection.query (
         //Insert Order
         insertorder,[total], (err, response) => {
-          //Get Id Order
-          const idorder=response.insertId;
-          //Maping Data Detail Order
-          const detail_order =req.body.order.map(item =>[
-          idorder,item.id_product,item.quantity,item.sub_total  
-          ]);
           if (!err) {
+            //Get Id Order
+           
+            const idorder=response.insertId;
+            //Maping Data Detail Order
+            const detail_order =req.body.body.order.map(item =>[
+            idorder,item.id_product,item.quantity,item.sub_total  
+            ]);
             //Insert Detail Order
             connection.query (
               insertdetail,[detail_order], (err, response) => {

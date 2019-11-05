@@ -14,7 +14,7 @@ const Router = express.Router ();
 //   }); 
 // })
 
-Router.use ('/product',verify, product);
+Router.use ('/product', product);
 Router.use('/auth',auth);
 
 module.exports = Router;

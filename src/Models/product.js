@@ -167,7 +167,7 @@ module.exports = {
 
   //Make Order
   insertOrder: req => {
-    const insertorder="INSERT INTO `order`(`total`) VALUES ?";
+    const insertorder="INSERT INTO `order`(`total`) VALUES (?)";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
     const total=req.body.body.subtotal.sub_total;
 
@@ -178,21 +178,21 @@ module.exports = {
         insertorder,[total], (err, response) => {
           if (!err) {
             //Get Id Order
-           
-            const idorder=response.insertId;
-            //Maping Data Detail Order
-            const detail_order =req.body.body.order.map(item =>[
-            idorder,item.id_product,item.quantity,item.sub_total  
-            ]);
-            //Insert Detail Order
-            connection.query (
-              insertdetail,[detail_order], (err, response) => {
-                if (!err) {
-                  resolve(response);
-                } else {
-                  reject (err);
-                }
-              });
+            resolve(response);
+            // const idorder=response.insertId;
+            // //Maping Data Detail Order
+            // const detail_order =req.body.body.order.map(item =>[
+            // idorder,item.id_product,item.quantity,item.sub_total  
+            // ]);
+            // //Insert Detail Order
+            // connection.query (
+            //   insertdetail,[detail_order], (err, response) => {
+            //     if (!err) {
+            //       resolve(response);
+            //     } else {
+            //       reject (err);
+            //     }
+            //   });
           } else {
             reject (err);
           }

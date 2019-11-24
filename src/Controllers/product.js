@@ -297,9 +297,10 @@ module.exports = {
   //Make Order
   orderProduct: (req, res) => {
     let qtyStatus = [];
-    let newOrder = Object.values(req.body.body.order)
+    let newOrder = Object.values(req.body.order)
     let id_product=[];
     let qtyinsert=[];
+    const total=req.body.total;
 
     //Maping Data Cek Id Product
     newOrder.forEach(function (item) {
@@ -331,7 +332,7 @@ module.exports = {
             })
           }else{
             //Make Order
-            return productModel.insertOrder(req)
+            return productModel.insertOrder(total,newOrder)
               .then(result => res.json({
                 status: 200,
                 message: 'Succes Make Order',

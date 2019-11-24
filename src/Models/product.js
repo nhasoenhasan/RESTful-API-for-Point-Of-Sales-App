@@ -166,12 +166,11 @@ module.exports = {
   },
 
   //Make Order
-  insertOrder: req => {
+  insertOrder: (total,newOrder) => {
     const insertorder="INSERT INTO `order`(`total`) VALUES (?)";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
-    const total=req.body.body.subtotal.sub_total;
+    // const total=req.body.total;
 
-     console.log("DATA>",total)
     return new Promise((resolve, reject) => {
       connection.query (
         //Insert Order
@@ -179,20 +178,22 @@ module.exports = {
           if (!err) {
             //Get Id Order
             resolve(response);
-            // const idorder=response.insertId;
-            // //Maping Data Detail Order
-            // const detail_order =req.body.body.order.map(item =>[
-            // idorder,item.id_product,item.quantity,item.sub_total  
-            // ]);
-            // //Insert Detail Order
-            // connection.query (
-            //   insertdetail,[detail_order], (err, response) => {
-            //     if (!err) {
-            //       resolve(response);
-            //     } else {
-            //       reject (err);
-            //     }
-            //   });
+            // console.log("HAIIII",response)
+            const idorder=response.insertId;
+            //Maping Data Detail Order
+            const detail_order =newOrder.map(item =>[
+              idorder,item.id_product,item.quantity,item.price  
+            ]);
+            console.log(detail_order)
+            //Insert Detail Order
+            connection.query (
+              insertdetail,[detail_order], (err, response) => {
+                if (!err) {
+                  resolve(response);
+                } else {
+                  reject (err);
+                }
+              });
           } else {
             reject (err);
           }

@@ -127,7 +127,6 @@ module.exports = {
 
   //Get Categories 
   getCategories: (req, res) => {
-    
     const numPerPage = parseInt(req.query.limit) || null
     const activePage = req.query.page || 1
     const beginData = numPerPage * (activePage - 1)
@@ -346,20 +345,18 @@ module.exports = {
       })
   },
 
-  // getByIdProduct: (req, res) => {
-  //   productModel
-  //     .getByIdProduct (req)
-  //     .then (response => {
-  //       if (response=='') {
-  //         form.failedResponse (res, 400, 'product does not exist');
-  //       } else {
-  //         form.formgetProduct (res, 200, response);
-  //       }
-  //     })
-  //     .catch (error => {
-  //       res.json(error);
-  //     })
-  // },
+  //Get All History Order
+  getallorderProduct: (req, res) => {
+    productModel.getallorderProduct()
+      .then (result =>res.json({
+        status:200,
+        message:'Succes',
+        data:result
+      }))
+      .catch (error => {
+        res.json(error);
+      });
+  },
 
   
 };

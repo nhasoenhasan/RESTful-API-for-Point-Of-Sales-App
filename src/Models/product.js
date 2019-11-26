@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     
-    //GET A BOOK
+    //GET A PRODUCT
     getAProduct: (id) => {
       return new Promise((resolve, reject) => {
         connection.query(`${joinTable} AND products.id_product=?`,id, (err, result) => {
@@ -167,7 +167,7 @@ module.exports = {
 
   //Make Order
   insertOrder: (total,newOrder) => {
-    const insertorder="INSERT INTO `order`(`total`) VALUES (?)";
+    const insertorder="INSERT INTO `orders`(`total`) VALUES (?)";
     const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
     // const total=req.body.total;
 
@@ -199,6 +199,19 @@ module.exports = {
           }
       });
     })
+  },
+
+  //GET ALL ORDER
+  getallorderProduct:() => {
+    return new Promise ((resolve, reject) => {
+        connection.query (`SELECT * FROM orders`, (err, response) => {
+          if (!err) {
+            resolve (response);
+          } else {
+            reject (err);
+          }
+          });
+      });
   },
 
 };

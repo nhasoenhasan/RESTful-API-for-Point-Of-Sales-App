@@ -20,5 +20,6 @@ Router
     .post('/reduce/:id', productController.reduceQuantity   )
     //Make Order
     .post('/order/', productController.orderProduct)
+    .get('/order',productController.getallorderProduct)
 
 module.exports = Router;

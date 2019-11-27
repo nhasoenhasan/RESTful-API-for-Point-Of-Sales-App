@@ -204,7 +204,7 @@ module.exports = {
   //GET ALL ORDER
   getallorderProduct:() => {
     return new Promise ((resolve, reject) => {
-        connection.query (`SELECT count(date_added) as counted_order from orders group by MONTH(date_added) ORDER BY MONTH(date_added) ASC `, (err, response) => {
+        connection.query (`SELECT MONTHNAME(date_added) AS month_name, count(date_added) as counted_order FROM orders GROUP BY MONTHNAME(date_added), MONTH(date_added) order by month(date_added)`, (err, response) => {
           if (!err) {
             resolve (response);
           } else {

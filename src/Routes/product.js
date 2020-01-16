@@ -1,24 +1,25 @@
 const express = require ('express');
 const cors = require('cors');
-
 const productController = require ('../Controllers/product');
-const categoriesController = require ('../Controllers/categories');
-
 const Router = express.Router ();
 
-Router.get ('/', productController.getProducts);
-Router.get('/sort',productController.sortProduct);
-Router.get('/search',productController.searchProduct);
-Router.post ('/', productController.postProduct);
-Router.post('/add/:id', productController.addQuantity);
-Router.post('/reduce/:id', productController.reduceProduct);
-Router.post('/order/', productController.orderProduct);
-Router.put ('/', productController.updateProduct);
-Router.delete('/:id', productController.deleteProduct);
-//-----------Categories-----------------
-Router.get ('/categories', categoriesController.getCategories);
-Router.post ('/categories', categoriesController.postCategories);
-Router.put ('/categories', categoriesController.updateCategories);
-Router.delete('/categories/:id', categoriesController.deleteCategories);
+Router
+    //Product CRUD
+    .get ('/', productController.getProducts)
+    //.get ('/:id', productController.getbyidProducts)
+    .post ('/', productController.insertProduct)
+    .patch ('/:id', productController.updateProduct)
+    .delete('/:id', productController.deleteProduct)
+    //Categories CRUD
+    .get ('/categories', productController.getCategories)
+    .post ('/categories', productController.insertCategories)
+    .patch ('/categories/:id', productController.updateCategories)
+    .delete('/categories/:id', productController.deleteCategories)
+    //cannot reduce bellow zero
+    .post('/add/:id', productController.addQuantity)
+    .post('/reduce/:id', productController.reduceQuantity   )
+    //Make Order
+    .post('/order/', productController.orderProduct)
+    .get('/order',productController.getallorderProduct)
 
 module.exports = Router;

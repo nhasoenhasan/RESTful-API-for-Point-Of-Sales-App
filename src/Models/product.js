@@ -1,91 +1,108 @@
 const connection = require ('../Configs/connect');
 var mysql = require('mysql');
-
+const joinTable ='SELECT products.id_product,products.quantity,products.name,products.description,products.image,categories.Categories,categories.id_categories,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories'
 
 module.exports = {
 
-  getCount:() => {
-    return new Promise ((resolve, reject) => {
-      let query ='SELECT COUNT(*) AS total FROM products';
-      query = mysql.format(query);
-        connection.query (query, (err, response) => {
-          if (!err) {
-            resolve (response);
-          } else {
-            reject (err);
-          }
-          });
-      });
-  },
+    //GET PRODUCT
+    getProduct:(queryLimit, sort, order, querySearch) => {
+      return new Promise ((resolve, reject) => {
+          connection.query (`${joinTable} ${querySearch} ORDER BY ${sort} ${order} ${queryLimit}`, (err, response) => {
+            if (!err) {
+              resolve (response);
+            } else {
+              
+              reject (err);
+            }
+            });
+        });
+    },
 
-  getProduct:(page,perpage) => {
-    return new Promise ((resolve, reject) => {
-      let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories limit ? OFFSET ?';
-      let set = [perpage,page];
-      query = mysql.format(query, set);
-        connection.query (query, (err, response) => {
+    //GET PRODUCT BY ID
+    getbyidProduct:(id) => {
+      return new Promise ((resolve, reject) => {
+          connection.query (`${joinTable}  WHERE products.id_product=${id}`, (err, response) => {
+            if (!err) {
+              resolve (response);
+            } else {
+              reject (err);
+            }
+            });
+        });
+    },
+    
+    //GET A PRODUCT
+    getAProduct: (id) => {
+      return new Promise((resolve, reject) => {
+        connection.query(`${joinTable} AND products.id_product=?`,id, (err, result) => {
           if (!err) {
-            resolve (response);
+            resolve(result)
           } else {
-            reject (err);
+            reject(result)
           }
-          });
+        })
+      })
+    },
+ 
+    //INSERT PRODUCT
+    postProduct: (data) => {
+      return new Promise ((resolve, reject) => {
+        connection.query ('INSERT INTO products SET ?',data,
+          (err, response) => {
+            if (!err) {
+              //SELECT DATA 
+              const id_product=response.insertId
+              connection.query (`${joinTable} WHERE id_product=?`,id_product,
+                (err, result) => {
+                  if (!err) {
+                    //SELECT DATA 
+                    resolve (result);
+                  } else {
+                    reject (err);
+                  }
+                }
+              );
+            } else {
+              reject (err);
+            }
+          }
+        );
       });
-  },
-
-  getByIdProduct:req => {
-    return new Promise ((resolve, reject) => {
-      let query ='SELECT products.quantity,products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories WHERE id_product=?';
-      let id = req.params.id;
-      connection.query (query,id, (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {
-          reject (err);
-        }
-      });
-    });
-  },
+    },
   
-  postProduct: req => {
-    return new Promise ((resolve, reject) => {
-      const body = req.body;
-      connection.query (
-        'INSERT INTO products SET name=?,description=?, image=?,id_categories=?,price=?,quantity=?',
-        [body.name, body.description,body.image, body.id_categories, body.price,body.quantity ],
-        (err, response) => {
-          if (!err) {
-            resolve (response);
-          } else {
-            reject (err);
+    //UPDATE PRODUCT
+    updateProduct: (data,id) => {
+      return new Promise ((resolve, reject) => {
+        connection.query ('UPDATE products SET ? WHERE id_product=?',[
+          data,
+          id
+        ],
+          (err, response) => {
+            if (!err) {
+              //SELECT DATA 
+              connection.query (`${joinTable} WHERE id_product=?`,id,
+                (err, result) => {
+                  if (!err) {
+                    //SELECT DATA 
+                    resolve (result);
+                  } else {
+                    reject (err);
+                  }
+                }
+              );
+            } else {
+              reject (err);
+            }
           }
-        }
-      );
-    });
-  },
-  
-  updateProduct: req => {
-    return new Promise ((resolve, reject) => {
-      const body = req.body;
-      connection.query (
-        'UPDATE products SET name=?,description=?,image=?,id_categories=?,price=?,quantity=? WHERE id_product=?',
-        [body.name,body.description,body.image, body.id_categories, body.price,body.quantity,body.id_product  ],
-        (err, response) => {
-          if (!err) {
-            resolve (response);
-          } else {
-            reject (err);
-          }
-        }
-      );
-    });
-  },
+        );
+      });
+    },
 
+  //Delete Product
   deleteProduct: (id) => {
     return new Promise ((resolve, reject) => {
       connection.query (
-        'DELETE FROM products WHERE id_product=?',
-        [id],
+        'DELETE FROM products WHERE id_product=?',id,
         (err, response) => {
           if (!err) {
             resolve (response);
@@ -97,178 +114,103 @@ module.exports = {
     });
   },
 
-  sortProduct: req => {
-    multiQuery='SELECT products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories ORDER BY ';
-    const name =req.query.sortby;
-    const order=req.query.orderby;
-    const cekname=['name','Categories','date_updated'];
-    const cekorder=['ASC','DESC'];
-    
+  //Check Categories
+  checkQuantity: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM products WHERE id_product=?`,id, (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(result)
+        }
+      })
+    })
+  },
+
+  //Add Quantity Product
+  addProduct: (quantity,id) => {
     return new Promise ((resolve, reject) => {
-      
-      if (cekname.includes(name)) {
-        if((cekorder.includes(order))){
-          connection.query (
-          multiQuery+name+' '+order,
-            (err, response) => {
-              if (!err) {
-                resolve (response);
-              } else {
-                reject (err);
-              }
-          }
-        );
-        }else{
-          connection.query (
-            multiQuery+name,
-              (err, response) => {
+      connection.query ('UPDATE products SET quantity = quantity + ?  WHERE id_product=?',[quantity,id], (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {
+          reject (err);
+        }
+      });
+    });
+  },
+
+  reduceProduct: (quantity,id) => {
+    return new Promise ((resolve, reject) => {
+      connection.query ('UPDATE products SET quantity = quantity - ?  WHERE id_product=?',[quantity,id], (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {
+          reject (err);
+        }
+      });
+    });
+  },
+
+  //Check Categories
+  checkQuantityorder: (id_product) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT quantity FROM products WHERE id_product IN (?)`,[id_product], (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
+
+  //Make Order
+  insertOrder: (total,newOrder) => {
+    const insertorder="INSERT INTO `orders`(`total`) VALUES (?)";
+    const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
+    // const total=req.body.total;
+
+    return new Promise((resolve, reject) => {
+      connection.query (
+        //Insert Order
+        insertorder,[total], (err, response) => {
+          if (!err) {
+            //Get Id Order
+            resolve(response);
+            // console.log("HAIIII",response)
+            const idorder=response.insertId;
+            //Maping Data Detail Order
+            const detail_order =newOrder.map(item =>[
+              idorder,item.id_product,item.quantity,item.price  
+            ]);
+            console.log(detail_order)
+            //Insert Detail Order
+            connection.query (
+              insertdetail,[detail_order], (err, response) => {
                 if (!err) {
-                  resolve (response);
+                  resolve(response);
                 } else {
                   reject (err);
                 }
-            }
-          );
-        }
-      } else {
-        connection.query (
-          multiQuery+'name',
-            (err, response) => {
-              if (!err) {
-                resolve (response);
-              } else {
-                reject (err);
-              }
-          }
-        )
-      }
-    });
-  },
-
-  searchProduct: req => {
-    const name =req.query.keywoard;
-    return new Promise ((resolve, reject) => {
-      connection.query ('SELECT products.name,products.description,products.image,categories.Categories ,products.price,products.date_added,products.date_updated FROM products INNER JOIN categories ON products.id_categories=categories.id_categories WHERE name LIKE? ',['%'+name+'%'], (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {
-          reject (err);
-        }
-      });
-    });
-  },
-
-  addProduct: req => {
-    const body = req.body;
-    const id=req.params.id;
-    query='UPDATE products SET quantity = quantity + ?  WHERE id_product=?';
-    
-    return new Promise ((resolve, reject) => {
-      connection.query (
-      query,
-      [body.quantity,id], (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {
-          reject (err);
-        }
-      });
-    });
-  },
-
-  reduceProduct: req => {
-    const body = req.body;
-    const id=req.params.id;
-    query='UPDATE products SET quantity = quantity - ?  WHERE id_product=?';
-    cekqty='SELECT quantity FROM products WHERE id_product=?';
-    return new Promise ((resolve, reject) => {
-      connection.query (
-        cekqty,[id], (err, response) => {
-          if (!err) {
-            if (response[0].quantity >= body.quantity ) {
-                if (response[0].quantity == 0) {
-                  resolve('Qty Insert Is Zero (0)');
-                } else {
-                  connection.query (
-                    query,
-                    [body.quantity,id], (err, response) => {
-                      if (!err) {
-                        resolve ("Success Reduce Quantity");
-                      } else {
-                        reject (err);
-                      }
-                    });
-                }
-            } else {
-              resolve('Quantity To Reduce:('+body.quantity+')More Higher Than Quantity Available('+response[0].quantity+')');
-            }
+              });
           } else {
             reject (err);
           }
-        });
-    });
+      });
+    })
   },
 
-  orderProduct: req => {
-    const total=req.body.total;
-    const insertorder="INSERT INTO `order` SET total=?";
-    const insertdetail="INSERT INTO `detail_order`(`id_order`, `id_product`, `qty`, `sub_total`) VALUES ?";
-    const querycekqty="SELECT quantity FROM products WHERE id_product IN (?)"
-    let qtyStatus = [];
-    
+  //GET ALL ORDER
+  getallorderProduct:() => {
     return new Promise ((resolve, reject) => {
-      //Maping Data Cek Id Product
-      const cekqty =req.body.order.map (item =>[
-         item.id_product
-      ]);
-      //Maping  Data Quantity 
-      const qtyinsert=req.body.order.map (item =>[
-        item.quantity
-     ]);
-     //Get Quantity
-      connection.query (
-      querycekqty,[cekqty], (err, response) => {
-        if (!err) {
-          //Compare Quantity
-          cekqty.forEach(function(item, index,array){
-            if (response[index].quantity > qtyinsert[index]) {
-              qtyStatus.push('true');
-            }else{
-              qtyStatus.push('false');
-            }
-          });
-          //Insert Order
-          if (qtyStatus.includes('false')) {
-            resolve ("Value Quantity Product Insert Is More Higher Than Data Availabel");
-          }else{
-            connection.query (
-              //Insert Order
-              insertorder,[total], (err, response) => {
-                const idorder=response.insertId;
-                //Maping Data Detail Order
-                const detail_order =req.body.order.map(item =>[
-                idorder,item.id_product,item.quantity,item.sub_total  
-                ]);
-                if (!err) {
-                  //Insert Detail Order
-                  connection.query (
-                    insertdetail,[detail_order], (err, response) => {
-                      if (!err) {
-                        resolve("Succes Make Order");
-                      } else {
-                        reject (err);
-                      }
-                    });
-                } else {
-                  reject (err);
-                }
-            });
+        connection.query (`SELECT MONTHNAME(date_added) AS month_name, count(date_added) as counted_order FROM orders GROUP BY MONTHNAME(date_added), MONTH(date_added) order by month(date_added)`, (err, response) => {
+          if (!err) {
+            resolve (response);
+          } else {
+            reject (err);
           }
-        } else {
-          reject (err);
-        }
-    });
-    });
+          });
+      });
   },
-
 };

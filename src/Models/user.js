@@ -3,10 +3,23 @@ var mysql = require('mysql');
 
 module.exports = {
 
-    registerUser:(username,password) => {
+  registerCheck:(data) => {
     return new Promise ((resolve, reject) => {
-      const query ='INSERT INTO user SET username=?, password=?';
-      connection.query (query,[username,password], (err, response) => {
+      const query ='SELECT * FROM user WHERE username=? OR email=?';
+      connection.query (query,[data.username,data.email], (err, response) => {
+        if (!err) {
+          resolve (response);
+        } else {    
+          reject (response);
+        }
+      });
+    });
+  },
+  
+  registerUser:(data) => {
+    return new Promise ((resolve, reject) => {
+      const query ='INSERT INTO user SET ?';
+      connection.query (query,data, (err, response) => {
         if (!err) {
           resolve (response);
         } else {    
@@ -16,23 +29,10 @@ module.exports = {
     });
   },
 
-  selectUser:() => {
-    return new Promise ((resolve, reject) => {
-      const query ='SELECT * FROM user';
-      connection.query (query, (err, response) => {
-        if (!err) {
-          resolve (response);
-        } else {    
-          reject (err);
-        }
-      });
-    });
-  },
-
-  signinUser:(username) => {
+  signinUser:(data) => {
     return new Promise ((resolve, reject) => {
       const query ='SELECT * FROM  user WHERE username=?';
-      connection.query (query,username, (err, response) => {
+      connection.query (query,data.username, (err, response) => {
         if (!err) {
           resolve (response);
         } else {    
